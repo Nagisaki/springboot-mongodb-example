@@ -47,6 +47,8 @@ public class Order {
     @Field("payment")
     private double payment;
 
+    private Integer age;
+
     @Field("items")
     private List<String> items;
 }

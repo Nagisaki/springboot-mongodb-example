@@ -8,3 +8,11 @@ spring:
       username: admin # 登录用户名
       password: admin # 登录用户密码
 #      authentication-database: admin # 认证数据库database名称
+
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          mongodb:
+            core: DEBUG

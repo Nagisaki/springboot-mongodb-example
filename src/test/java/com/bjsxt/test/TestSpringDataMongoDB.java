@@ -393,6 +393,7 @@ public class TestSpringDataMongoDB {
     @Test
     public void testSort() {
         Query query = new Query();
+        // Sort by(Sort.Direction direction, String... properties)
         Sort sort = Sort.by(Sort.Direction.DESC, "title");
         query.with(sort);
         List<Order> orders = mongoTemplate.find(query, Order.class);
@@ -402,6 +403,7 @@ public class TestSpringDataMongoDB {
     @Test
     public void testSort2() {
         Query query = new Query();
+        // Sort by(Sort.Order... orders)
         Sort sort = Sort.by(Sort.Order.desc("title"), Sort.Order.asc("payment"));
         query.with(sort);
         List<Order> orders = mongoTemplate.find(query, Order.class);
@@ -409,12 +411,14 @@ public class TestSpringDataMongoDB {
     }
 
     /**
-     * 分页,
+     * 分页
      */
     @Test
     public void testPagination() {
         Query query = new Query();
-        query.with(PageRequest.of(0, 3));
+        query.skip(0);
+        query.limit(2);
+//        query.with(PageRequest.of(0, 3));
         List<Order> orders = mongoTemplate.find(query, Order.class);
         orders.stream().forEach(System.out::println);
     }
@@ -449,10 +453,15 @@ public class TestSpringDataMongoDB {
     public void testAgg() {
         TypedAggregation<Order> typedAggregation =
                 TypedAggregation.newAggregation(Order.class,
-                        Aggregation.match(Criteria.where("payment").gt(120)),
-                        Aggregation.group("title").count().as("rows")
+//                        Aggregation.match(Criteria.where("payment").gt("100")),
+                        Aggregation.group("title")
+//                                .sum("age").as("sum")
+//                                .avg("age").as("avg")
+//                                .max("age").as("max")
+                                .min("age").as("min"),
 //                        Aggregation.skip(1),
 //                        Aggregation.limit(1)
+                        Aggregation.sort(Sort.by(Sort.Order.desc("title")))
                 );
         AggregationResults<Map> results = mongoTemplate.aggregate(typedAggregation, Map.class);
         // results.getUniqueMappedResult();
